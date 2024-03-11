@@ -21,13 +21,14 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.userSignUp(signUpRequest));
     }
     @PostMapping("/signin")
-    public ResponseEntity<LoginResponse> signin(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> signInUser(@RequestBody LoginRequest loginRequest) {
         return customerService.signInUser(loginRequest);
     }
     @GetMapping("/get-all-todos")
-    public List<ToDoDto> getPosts() {
+    public List<ToDoDto> fetchAll() {
         return customerService.fetchAll();
     }
+
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<ToDoDto> fetchById(@PathVariable String id) {
         try {

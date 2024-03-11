@@ -37,11 +37,13 @@ public class CustomerService {
     @Autowired
 
     private  JwtUtils jwtUtils;
+    @Autowired
+    private RestTemplate restTemplate;
 
-    @Value("${jsonplaceholder.app.url}")
+    @Value("${app.url}")
     private String url;
 
-    private RestTemplate restTemplate = new RestTemplate();
+   //private RestTemplate restTemplate = new RestTemplate();
 
 
     public RegistrationResponse userSignUp(RegistrationRequest signUpRequest) {
@@ -79,7 +81,7 @@ public class CustomerService {
     }
 
     public ResponseEntity<LoginResponse> signInUser(LoginRequest loginRequest) {
-        System.err.println("Getting in SigninUser");
+
         LoginResponse response = new LoginResponse();
         try {
             authenticationManager.authenticate(
@@ -95,7 +97,7 @@ public class CustomerService {
             response.setUsername(customer.getUsername());
             response.setAuthority(Role.CUSTOMER);
             response.setRefreshToken(refreshToken);
-            response.setTokenExpirationTime("24Hr");
+            response.setTokenExpirationTime("8 min");
             response.setLoginMessage("Successfully Signed In " + customer.getRole());
         } catch (Exception e) {
 

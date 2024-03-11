@@ -6,7 +6,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
 @SpringBootApplication
-//@ComponentScan(basePackages = {"com.example"}, excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com/example/target/.*"))
 
 public class CustomerRegistrationPortalApplication {
 

@@ -32,8 +32,8 @@ public class SecurityFilterChainConfiguration {
         httpSecurity.authorizeHttpRequests(
                 requestMatcher -> requestMatcher
                         .requestMatchers("/admin/signup", "/admin/signin", "/customer/signup","/customer/signin").permitAll()
-                        .requestMatchers("/admin/show-all-customer", "/admin/addAdmin").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/customer/get-all-todos", "/customer/get-by-id/{id}").permitAll()
+                        .requestMatchers("/admin/showAllCustomer", "/admin/addAdmin").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/customer/getAllTodos", "/customer/getToDoById/{id}").hasAnyAuthority("CUSTOMER")
                         .anyRequest().authenticated()
         );
         //Authentication Entry Point

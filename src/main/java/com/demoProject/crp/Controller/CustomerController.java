@@ -3,6 +3,7 @@ package com.demoProject.crp.Controller;
 import com.demoProject.crp.CustomException.ToDoNotFoundException;
 import com.demoProject.crp.Dto.*;
 import com.demoProject.crp.Service.CustomerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import java.util.List;
 public class CustomerController {
     private final CustomerService customerService;
     @PostMapping("/signup")
-    public ResponseEntity<RegistrationResponse> signUp(@RequestBody RegistrationRequest signUpRequest) {
+    public ResponseEntity<RegistrationResponse> signUp(@Valid @RequestBody RegistrationRequest signUpRequest) {
 
         return ResponseEntity.ok(customerService.userSignUp(signUpRequest));
     }
@@ -24,12 +25,12 @@ public class CustomerController {
     public ResponseEntity<LoginResponse> signInUser(@RequestBody LoginRequest loginRequest) {
         return customerService.signInUser(loginRequest);
     }
-    @GetMapping("/get-all-todos")
+    @GetMapping("/getAllTodos")
     public List<ToDoDto> fetchAll() {
         return customerService.fetchAll();
     }
 
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/getToDoById/{id}")
     public ResponseEntity<ToDoDto> fetchById(@PathVariable String id) {
         try {
             Integer i = Integer.parseInt(id);

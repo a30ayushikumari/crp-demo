@@ -48,7 +48,7 @@ public class JwtUtils {
     }
     public String generateToken(String username) {
         var currentDate = new Date();
-        var jwtTokenExpirationInMinute = 10;
+        var jwtTokenExpirationInMinute = 8;
         var tokenExpiration = DateUtils.addMinutes(currentDate, jwtTokenExpirationInMinute);
         return Jwts.builder()
                 .id(UUID.randomUUID().toString())
@@ -62,7 +62,7 @@ public class JwtUtils {
 
     public String generateRefreshToken(String username) {
         var currentDate = new Date();
-        var jwtTokenExpirationInMinute = 10;
+        var jwtTokenExpirationInMinute = 8;
         var tokenExpiration = DateUtils.addMinutes(currentDate, jwtTokenExpirationInMinute);
         return Jwts.builder()
                 .id(UUID.randomUUID().toString())

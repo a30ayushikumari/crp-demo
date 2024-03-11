@@ -8,6 +8,7 @@ import com.demoProject.crp.Dto.RegistrationResponse;
 import com.demoProject.crp.Entity.Customer;
 import com.demoProject.crp.Service.AdminService;
 import com.demoProject.crp.Service.CustomerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,12 @@ import java.util.List;
 
 public class AdminController {
     @Autowired
-   private   AdminService adminService;
+   private AdminService adminService;
     @Autowired
-   private  CustomerService customerService;
+   private CustomerService customerService;
 
     @PostMapping("/signup")
-    public ResponseEntity<RegistrationResponse> signUp(@RequestBody RegistrationRequest signUpRequest) {
+    public ResponseEntity<RegistrationResponse> signUp(@Valid @RequestBody RegistrationRequest signUpRequest) {
         System.err.println(signUpRequest.toString());
         return ResponseEntity.ok(adminService.adminSignUp(signUpRequest));
     }
@@ -34,7 +35,7 @@ public class AdminController {
     public ResponseEntity<LoginResponse> signin(@RequestBody LoginRequest loginRequest) {
         return adminService.signInAdmin(loginRequest);
     }
-    @GetMapping("/show-all-customer")
+    @GetMapping("/showAllCustomer")
     public List<Customer> getAllCustomers() {
         List<Customer> custom=customerService.getAllCustomers();
 
@@ -45,7 +46,7 @@ public class AdminController {
 
     }
     @PostMapping("/addAdmin")
-    public ResponseEntity<RegistrationResponse> addAdmin(@RequestBody RegistrationRequest registrationRequest) {
+    public ResponseEntity<RegistrationResponse> addAdmin(@Valid  @RequestBody RegistrationRequest registrationRequest) {
         return adminService.addAdmin(registrationRequest);
 
     }

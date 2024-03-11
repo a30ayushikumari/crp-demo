@@ -35,7 +35,7 @@ public class AdminService {
         RegistrationResponse resp = new RegistrationResponse();
         try {
 
-            if (adminRepository.existsByUsername(signUpRequest.getEmail())) {
+            if (adminRepository.existsByUsername(signUpRequest.getUsername())) {
                 resp.setHttpStatusCode(400);
                 resp.setMessage("Username already exists.");
                 return resp;
@@ -50,7 +50,7 @@ public class AdminService {
             if (signUpRequest != null && signUpRequest.getPassword() != null) {
                 Admin ourAdminResult = adminRepository.save(admin);
                 resp.setAdmin(ourAdminResult);
-                resp.setMessage("User Registration success");
+                resp.setMessage("Admin Registration success");
                 resp.setHttpStatusCode(200);
             }
         } catch (Exception e) {

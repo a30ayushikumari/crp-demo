@@ -15,6 +15,7 @@ public class CustomerNotFoundException extends RuntimeException{
         this.ErrorDetails = errorDetails;
         this.http = http;
     }
+
     public CustomerNotFoundException(String msg, Throwable cause) {
         super(msg, cause);
     }

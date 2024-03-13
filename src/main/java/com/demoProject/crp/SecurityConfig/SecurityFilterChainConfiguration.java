@@ -20,7 +20,6 @@ public class SecurityFilterChainConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-
     @Bean
     public SecurityFilterChain securityFilterChainConfig(HttpSecurity httpSecurity)throws Exception{
         //Disable CORS
@@ -31,9 +30,9 @@ public class SecurityFilterChainConfiguration {
 
         httpSecurity.authorizeHttpRequests(
                 requestMatcher -> requestMatcher
-                        .requestMatchers("/admin/signup", "/admin/signin", "/customer/signup","/customer/signin").permitAll()
-                        .requestMatchers("/admin/showAllCustomer", "/admin/addAdmin").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/customer/getAllTodos", "/customer/getToDoById/{id}").hasAnyAuthority("CUSTOMER")
+                        .requestMatchers("/admin/sign-up", "/admin/sign-in", "/customer/sign-up","/customer/sign-in").permitAll()
+                        .requestMatchers("/admin/show-all-customer", "/admin/add-admin").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/customer/all-todos", "/customer/todo-by-id/{id}").hasAnyAuthority("CUSTOMER")
                         .anyRequest().authenticated()
         );
         //Authentication Entry Point

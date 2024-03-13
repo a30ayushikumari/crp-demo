@@ -4,6 +4,7 @@ import com.demoProject.crp.CustomException.ToDoNotFoundException;
 import com.demoProject.crp.Dto.*;
 import com.demoProject.crp.Entity.Customer;
 import com.demoProject.crp.Entity.Role;
+import com.demoProject.crp.Mapper.CustomerMapper;
 import com.demoProject.crp.Repository.CustomerRepository;
 import com.demoProject.crp.SecurityConfig.Util.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -44,41 +45,35 @@ public class CustomerService {
     private String url;
 
    //private RestTemplate restTemplate = new RestTemplate();
+   public CustomerDto userSignUp(RegistrationRequest signUpRequest) {
+        CustomerDto customerDto = new CustomerDto();
 
+       try {
 
-    public RegistrationResponse userSignUp(RegistrationRequest signUpRequest) {
+           if (customerRepository.existsByUsername(signUpRequest.getUsername())) {
+               customerDto.setStatusCode(HttpStatus.CONFLICT);
+               customerDto.setMessage("Username already exists.");
+               return customerDto;
+           }
 
-        RegistrationResponse resp = new RegistrationResponse();
-        try {
+           Customer customer = new Customer();
+           customer.setEmail(signUpRequest.getEmail());
+           customer.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+           customer.setUsername(signUpRequest.getUsername());
+           customer.setName(signUpRequest.getName());
 
-            if (customerRepository.existsByUsername(signUpRequest.getUsername())) {
-                resp.setHttpStatusCode(400);
-                resp.setMessage("Username already exists.");
-                return resp;
-            }
+           if (signUpRequest != null && signUpRequest.getPassword() != null) {
+               customerDto = CustomerMapper.entityToDto(customer);
+               customerRepository.save(customer);
+           }
+       } catch (Exception e) {
+           customerDto.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+           customerDto.setErrorMessage("Internal Server Error. Please try again.");
 
-            Customer customer = new Customer();
-            customer.setEmail(signUpRequest.getEmail());
-            customer.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-            customer.setUsername(signUpRequest.getUsername());
-            customer.setName(signUpRequest.getName());
-
-            if (signUpRequest != null && signUpRequest.getPassword() != null) {
-
-                Customer ourCustomerResult = customerRepository.save(customer);
-                resp.setCustomer(ourCustomerResult);
-                resp.setMessage("Customer Registration Success");
-                resp.setHttpStatusCode(200);
-
-            }
-        } catch (Exception e) {
-            resp.setHttpStatusCode(500);
-            resp.setErrorMessage("Internal Server Error. Please try again.");
-
-            e.printStackTrace();
-        }
-        return resp;
-    }
+           e.printStackTrace();
+       }
+       return customerDto;
+   }
 
     public ResponseEntity<LoginResponse> signInUser(LoginRequest loginRequest) {
 

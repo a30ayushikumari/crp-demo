@@ -17,7 +17,7 @@ public class RegistrationResponse {
     private String message;
 
     private Admin admin;
-    private Customer customer;
+    private CustomerDto customer;
 
     private String errorMessage;
 }

@@ -1,10 +1,8 @@
 package com.demoProject.crp.Controller;
 
 import com.demoProject.crp.CustomException.CustomerNotFoundException;
-import com.demoProject.crp.Dto.LoginRequest;
-import com.demoProject.crp.Dto.LoginResponse;
-import com.demoProject.crp.Dto.RegistrationRequest;
-import com.demoProject.crp.Dto.RegistrationResponse;
+import com.demoProject.crp.Dto.*;
+import com.demoProject.crp.Entity.Admin;
 import com.demoProject.crp.Entity.Customer;
 import com.demoProject.crp.Service.AdminService;
 import com.demoProject.crp.Service.CustomerService;
@@ -26,16 +24,16 @@ public class AdminController {
     @Autowired
    private CustomerService customerService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<RegistrationResponse> signUp(@Valid @RequestBody RegistrationRequest signUpRequest) {
-        System.err.println(signUpRequest.toString());
-        return ResponseEntity.ok(adminService.adminSignUp(signUpRequest));
-    }
-    @PostMapping("/signin")
+//    @PostMapping("/sign-up")
+//    public ResponseEntity<AdminDto> signUp(@Valid @RequestBody RegistrationRequest signUpRequest) {
+//        System.err.println(signUpRequest.toString());
+//        return ResponseEntity.ok(adminService.adminSignUp(signUpRequest));
+//    }
+    @PostMapping("/sign-in")
     public ResponseEntity<LoginResponse> signin(@RequestBody LoginRequest loginRequest) {
         return adminService.signInAdmin(loginRequest);
     }
-    @GetMapping("/showAllCustomer")
+    @GetMapping("/show-all-customer")
     public List<Customer> getAllCustomers() {
         List<Customer> custom=customerService.getAllCustomers();
 
@@ -45,9 +43,8 @@ public class AdminController {
         throw new CustomerNotFoundException("No Customers Found", "Try Again!", HttpStatus.NOT_FOUND);
 
     }
-    @PostMapping("/addAdmin")
-    public ResponseEntity<RegistrationResponse> addAdmin(@Valid  @RequestBody RegistrationRequest registrationRequest) {
-        return adminService.addAdmin(registrationRequest);
-
+    @PostMapping("/add-admin")
+    public ResponseEntity<AdminDto> addAdmin(@Valid  @RequestBody RegistrationRequest registrationRequest) {
+        return ResponseEntity.ok(adminService.addAdmin(registrationRequest));
     }
 }

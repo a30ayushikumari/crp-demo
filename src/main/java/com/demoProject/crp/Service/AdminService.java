@@ -1,15 +1,18 @@
 package com.demoProject.crp.Service;
 
-import com.demoProject.crp.Dto.LoginRequest;
-import com.demoProject.crp.Dto.LoginResponse;
-import com.demoProject.crp.Dto.RegistrationRequest;
-import com.demoProject.crp.Dto.RegistrationResponse;
+import com.demoProject.crp.Dto.*;
 import com.demoProject.crp.Entity.Admin;
+import com.demoProject.crp.Entity.Customer;
 import com.demoProject.crp.Entity.Role;
+import com.demoProject.crp.Mapper.AdminMapper;
+import com.demoProject.crp.Mapper.CustomerMapper;
 import com.demoProject.crp.Repository.AdminRepository;
 import com.demoProject.crp.SecurityConfig.Util.JwtUtils;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,37 +33,22 @@ public class AdminService {
     @Autowired
     private  JwtUtils jwtUtils;
 
-    public RegistrationResponse adminSignUp(RegistrationRequest signUpRequest) {
-
-        RegistrationResponse resp = new RegistrationResponse();
-        try {
-
-            if (adminRepository.existsByUsername(signUpRequest.getUsername())) {
-                resp.setHttpStatusCode(400);
-                resp.setMessage("Username already exists.");
-                return resp;
+        @PostConstruct
+        public void initData() {
+            // Check if any admins exist in the database
+            if (adminRepository.count() == 0) {
+                // If no admins found, create a default admin
+                Admin defaultAdmin = new Admin();
+                defaultAdmin.setId(1);
+                defaultAdmin.setName("Ayushi");
+                defaultAdmin.setUsername("ayushi83");
+                defaultAdmin.setEmail("ayushi83@gmail.com");
+                defaultAdmin.setPassword(passwordEncoder.encode("ayushi123")); // Use proper password encoding
+                defaultAdmin.setRole(Role.ADMIN);
+                // Save the default admin to the database
+                adminRepository.save(defaultAdmin);
             }
-
-            Admin admin = new Admin();
-            admin.setUsername(signUpRequest.getUsername());
-            admin.setEmail(signUpRequest.getEmail());
-            admin.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-            admin.setName(signUpRequest.getName());
-
-            if (signUpRequest != null && signUpRequest.getPassword() != null) {
-                Admin ourAdminResult = adminRepository.save(admin);
-                resp.setAdmin(ourAdminResult);
-                resp.setMessage("Admin Registration success");
-                resp.setHttpStatusCode(200);
-            }
-        } catch (Exception e) {
-            resp.setHttpStatusCode(500);
-            resp.setErrorMessage("Internal Server Error. Try again.");
-
-            e.printStackTrace();
         }
-        return resp;
-    }
 
     public ResponseEntity<LoginResponse> signInAdmin(LoginRequest loginRequest) {
 
@@ -89,22 +77,31 @@ public class AdminService {
         return ResponseEntity.ok(response);
 
     }
-    public ResponseEntity<RegistrationResponse> addAdmin(RegistrationRequest registrationRequest) {
-        RegistrationResponse response = new RegistrationResponse();
-        Admin admin = new Admin();
-        admin.setEmail(registrationRequest.getEmail());
-        admin.setUsername(registrationRequest.getUsername());
-        admin.setName(registrationRequest.getName());
-        admin.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
-        admin.setRole(Role.ADMIN);
+    public AdminDto addAdmin(RegistrationRequest registrationRequest) {
+            AdminDto adminDto = new AdminDto();
 
-        adminRepository.save(admin);
-        response.setAdmin(admin);
-        response.setMessage("Admin Added Successfully");
-        response.setHttpStatusCode(200);
+        try {
+            if (adminRepository.existsByUsername(registrationRequest.getUsername())) {
+                adminDto.setStatusCode(HttpStatus.CONFLICT);
+                adminDto.setMessage("Admin already exists.");
+                   return adminDto;
+            }
+            Admin admin = new Admin();
+            admin.setEmail(registrationRequest.getEmail());
+            admin.setUsername(registrationRequest.getUsername());
+            admin.setName(registrationRequest.getName());
+            admin.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
+            admin.setRole(Role.ADMIN);
 
-        return ResponseEntity.ok(response);
-
+            if (registrationRequest != null && registrationRequest.getPassword() != null) {
+                adminDto = AdminMapper.entityToDto(admin);
+                adminRepository.save(admin);
+            }
+        } catch (Exception e) {
+            adminDto.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+            adminDto.setErrorMessage("Internal Server Error. Please try again");
+        }
+        return adminDto;
     }
 
 }

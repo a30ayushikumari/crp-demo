@@ -12,12 +12,11 @@ import org.springframework.http.HttpStatusCode;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CustomerDto {
+public class AdminDto {
     private HttpStatusCode statusCode;
     private String ErrorMessage;
     private String message;
     private String name;
     private String username;
     private String email;
-
 }

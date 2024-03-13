@@ -16,31 +16,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
-    @PostMapping("/signup")
-    public ResponseEntity<RegistrationResponse> signUp(@Valid @RequestBody RegistrationRequest signUpRequest) {
-
+//    @PostMapping("/sign-up")
+//    public ResponseEntity<RegistrationResponse> signUp(@Valid @RequestBody RegistrationRequest signUpRequest) {
+//
+//        return ResponseEntity.ok(customerService.userSignUp(signUpRequest));
+//    }
+    @PostMapping("/sign-up")
+    public ResponseEntity<CustomerDto> signUp(@Valid @RequestBody RegistrationRequest signUpRequest) {
         return ResponseEntity.ok(customerService.userSignUp(signUpRequest));
-    }
-    @PostMapping("/signin")
+}
+    @PostMapping("/sign-in")
     public ResponseEntity<LoginResponse> signInUser(@RequestBody LoginRequest loginRequest) {
         return customerService.signInUser(loginRequest);
     }
-    @GetMapping("/getAllTodos")
+    @GetMapping("/all-todos")
     public List<ToDoDto> fetchAll() {
         return customerService.fetchAll();
     }
 
-    @GetMapping("/getToDoById/{id}")
+    @GetMapping("/todo-by-id/{id}")
     public ResponseEntity<ToDoDto> fetchById(@PathVariable String id) {
-        try {
-            Integer i = Integer.parseInt(id);
-            System.err.println(i);
-
-        } catch (Exception e) {
-            throw new ToDoNotFoundException("Id didn't match", "Provide correct Id",
-                    HttpStatus.NOT_ACCEPTABLE);
-        }
-        ToDoDto todo = customerService.fetchById(Long.parseLong(id));
-        return new ResponseEntity<>(todo, HttpStatus.OK);
+        return new ResponseEntity<>(customerService.fetchById(Long.parseLong(id)), HttpStatus.OK);
     }
 }

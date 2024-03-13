@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 
 @ControllerAdvice
 public class ExceptionHandler {
+
     @org.springframework.web.bind.annotation.ExceptionHandler(value = { ToDoNotFoundException.class })
     public ResponseEntity<Object> handleApiRequestException(ToDoNotFoundException ex) {
         Exception exception = new Exception(ex.getMessage(), ex.http, ex.ErrorDetails);
